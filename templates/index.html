@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grocery Aggregator</title>
+    <link rel="stylesheet" href="static/styles.css"/>
+</head>
+<body>
+    <h1>Grocery Aggregator (WIP)</h1>
+        {% if products == []: %}
+        <p>No Products Available.</p>
+        {% endif %}
+
+        <!--add update button-->
+        <a href="{{  url_for('update_products') }}">Update Prices</a>
+            {% for product in products %}
+            <div>
+                <img alt="No image. Update Products." src="{{  product.img }}">
+                <h3>{{product.name}}</h3>
+                <p><strong>${{product.price}}</strong> / {{product.store}} / {{product.category}}</p>
+            </div>
+            {% endfor %}
+
+</body>
+</html>

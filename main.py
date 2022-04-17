@@ -40,14 +40,51 @@ class Product(db.Model):
 db.create_all()
 
 
-#TODO Design REST API to handle adding, deleting, and updating product database
-
 # display database results (manipulate index.html)
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
-    # products = db.session.query(Product).all()
+    #GET
     all_products = Product.query.all()
-    return render_template("index.html", products=all_products)
+    stores = []
+    categories = []
+
+    for product in all_products:
+        if product.store not in stores:
+            stores.append(product.store)
+        if product.category not in categories:
+            categories.append(product.category)
+
+    if request.method == "POST":
+        select_stores = request.form.getlist('stores')
+        select_categories = request.form.getlist('categories')
+        price_sorting = request.form.get('price-sorting')
+        select_products = []
+
+        for product in all_products:
+            if select_stores and select_categories:
+                if product.store in select_stores and product.category in select_categories:
+                    select_products.append(product)
+            elif select_stores and product.store in select_stores:
+                select_products.append(product)
+            elif select_categories and product.category in select_categories:
+                select_products.append(product)
+        if price_sorting == "Ascending":
+            select_products.sort(key=lambda x: x.price)
+        elif price_sorting == "Descending":
+            # select_products = sorted(select_products, key=product.price, reverse=True)
+            select_products.sort(key=lambda x: x.price, reverse=True)
+        # TODO add unit price to Product class and scrape and process it
+        # comparing unit price for meat
+        elif select_categories.count("meat") == len(select_categories):
+            if price_sorting == "Ascending-Unit-Price":
+                pass
+            if price_sorting == "Descending-Unit-Price":
+                pass
+
+        return render_template("index.html", products=select_products, stores=stores, categories=categories)
+    else:
+        return render_template("index.html", products=all_products, stores=stores, categories=categories)
+
 
 @app.route("/update-products", methods=["GET"])
 def update_products():

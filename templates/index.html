@@ -7,19 +7,41 @@
 </head>
 <body>
     <h1>Grocery Aggregator (WIP)</h1>
-        {% if products == []: %}
-        <p>No Products Available.</p>
-        {% endif %}
+    {% if products == []: %}
+    <p>No Products Available.</p>
+    {% endif %}
 
-        <!--add update button-->
-        <a href="{{  url_for('update_products') }}">Update Prices</a>
-            {% for product in products %}
-            <div>
-                <img alt="No image. Update Products." src="{{  product.img }}">
-                <h3>{{product.name}}</h3>
-                <p><strong>${{product.price}}</strong> / {{product.store}} / {{product.category}}</p>
-            </div>
+    <!--add update button-->
+    <a href="{{ url_for('update_products') }}">Update Prices</a>
+    <form href="{{ url_for('home') }}" method="post">
+        <label for="Price">Price:</label>
+        <select name="price-sorting">
+          <option value="Ascending">Low to High</option>
+          <option value="Descending">High to Low</option>
+          <option value="Ascending-Unit-Price">Low to High Unit Price (meat only)</option>
+          <option value="Descending-Unit-Price">High to Low Unit Price (meat only)</option>
+        </select>
+        <label for="Store">Store:</label>
+        <select name="stores" multiple>
+            {% for store in stores %}
+                <option value="{{store}}">{{store}}</option>
             {% endfor %}
+        </select>
+        <label for="Category">Category:</label>
+        <select name="categories" multiple>
+            {% for category in categories %}
+                <option value="{{category}}">{{category}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    {% for product in products %}
+        <div>
+            <img alt="No image. Update Products." src="{{product.img}}">
+            <h3>{{product.name}}</h3>
+            <p><strong>${{product.price}}</strong> / {{product.store}} / {{product.category}}</p>
+        </div>
+    {% endfor %}
 
 </body>
 </html>

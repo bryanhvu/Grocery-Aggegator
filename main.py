@@ -1,10 +1,9 @@
-#TODO Implement web scraper to retrieve product pricing from specified retailer websites
 import requests
 import lxml
 import re
 import json
 from bs4 import BeautifulSoup
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -39,31 +38,32 @@ def home():
     categories = set([product.category for product in all_products])
 
     if request.method == "POST":
-        select_stores = request.form.getlist('stores')
-        select_categories = request.form.getlist('categories')
-        price_sorting = request.form.get('price-sorting')
+        select_products = [product for product in all_products if product.store in request.form.getlist('stores')]
+        select_products = [product for product in select_products if product.category in request.form.getlist('categories')]
 
-        select_products = [product for product in all_products if product.store in select_stores]
-        select_products = [product for product in select_products if product.category in select_categories]
-
-        if price_sorting == "Ascending":
+        sorting = request.form.get('sorting')
+        if sorting == "Ascending-Alphabetical":
+            select_products.sort(key=lambda x: x.name)
+        elif sorting == "Descending-Alphabetical":
+            select_products.sort(key=lambda x: x.name, reverse=True)
+        elif sorting == "Ascending-Price":
             select_products.sort(key=lambda x: x.price)
-        elif price_sorting == "Descending":
+        elif sorting == "Descending-Price":
             select_products.sort(key=lambda x: x.price, reverse=True)
         # TODO add unit price to Product class and scrape and process it
         # comparing unit price for meat
-        elif select_categories.count("meat") == len(select_categories):
-            if price_sorting == "Ascending-Unit-Price":
-                pass
-            if price_sorting == "Descending-Unit-Price":
-                pass
+        # elif select_categories.count("meat") == len(select_categories):
+        #     if price_sorting == "Ascending-Unit-Price":
+        #         pass
+        #     if price_sorting == "Descending-Unit-Price":
+        #         pass
 
         return render_template("index.html", products=select_products, stores=stores, categories=categories)
     else:
         return render_template("index.html", products=all_products, stores=stores, categories=categories)
 
 
-@app.route("/update-products", methods=["GET"])
+@app.route("/update-products", methods=["GET", "POST"])
 def update_products():
     """Update product price and image."""
     for product in Product.query.all():
@@ -100,6 +100,5 @@ if __name__ == '__main__':
 
 #TODO Compile comprehensive list of relevant products in database
 
-#TODO Beautify HTML and CSS
 
 #TODO Deploy website with Heroku

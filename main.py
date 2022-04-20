@@ -33,23 +33,23 @@ db.create_all()
 # display database results (manipulate index.html)
 @app.route("/", methods=["GET", "POST"])
 def home():
-    all_products = Product.query.all()
-    stores = set([product.store for product in all_products])
-    categories = set([product.category for product in all_products])
+    products = Product.query.all()
+    stores = set([product.store for product in products])
+    categories = set([product.category for product in products])
 
     if request.method == "POST":
-        select_products = [product for product in all_products if product.store in request.form.getlist('stores')]
-        select_products = [product for product in select_products if product.category in request.form.getlist('categories')]
+        products = [prod for prod in products if prod.store in request.form.getlist('stores')]
+        products = [prod for prod in products if prod.category in request.form.getlist('categories')]
 
         sorting = request.form.get('sorting')
         if sorting == "Ascending-Alphabetical":
-            select_products.sort(key=lambda x: x.name)
+            products.sort(key=lambda x: x.name)
         elif sorting == "Descending-Alphabetical":
-            select_products.sort(key=lambda x: x.name, reverse=True)
+            products.sort(key=lambda x: x.name, reverse=True)
         elif sorting == "Ascending-Price":
-            select_products.sort(key=lambda x: x.price)
+            products.sort(key=lambda x: x.price)
         elif sorting == "Descending-Price":
-            select_products.sort(key=lambda x: x.price, reverse=True)
+            products.sort(key=lambda x: x.price, reverse=True)
         # TODO add unit price to Product class and scrape and process it
         # comparing unit price for meat
         # elif select_categories.count("meat") == len(select_categories):
@@ -58,12 +58,10 @@ def home():
         #     if price_sorting == "Descending-Unit-Price":
         #         pass
 
-        return render_template("index.html", products=select_products, stores=stores, categories=categories)
-    else:
-        return render_template("index.html", products=all_products, stores=stores, categories=categories)
+    return render_template("index.html", products=products, stores=stores, categories=categories)
 
 
-@app.route("/update-products", methods=["GET", "POST"])
+@app.route("/update-products", methods=["GET"])
 def update_products():
     """Update product price and image."""
     for product in Product.query.all():
@@ -86,8 +84,8 @@ def update_products():
 
     # print(kroger_soup)
 
+    # return render_template("index.html")
     return redirect(url_for("home"))
-
 
 @app.route("/remove-product/<int:product_id>", methods=["DELETE"])
 def delete_product(product_id):

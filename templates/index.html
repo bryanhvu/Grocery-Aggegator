@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+	Miniport by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>Grocery Aggregator</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="static/main.css">
+		<link rel="icon" type="image/x-icon" href="http://127.0.0.1:5000/static/images/gator.ico">
+	</head>
+	<body class="is-preload vsc-initialized" contenteditable="false">
+
+		<!-- Nav -->
+			<nav id="nav">
+				<ul class="container">
+					<li><a href="#top">WIP</a></li>
+
+				</ul>
+			</nav>
+
+		<!-- Home -->
+			<article id="top" class="wrapper style1" style="padding-bottom: 2em;padding-top: 3em;">
+				<div class="container">
+					<div class="row">
+						
+						<div class="col-8 col-7-large col-12-medium">
+							<header>
+								<h1>Grocery Aggregator<br></h1>
+							</header>
+						</div>
+					</div>
+
+				   <form href="{{ url_for('home') }}" method="post">
+					   <div class="sort">
+						   <label for="Sort">Sort:</label>
+						   <select name="sorting">
+							 <option value="Ascending-Alphabetical">A to Z</option>
+							 <option value="Descending-Alphabetical">Z to A</option>
+							 <option value="Ascending-Price">Low to High</option>
+							 <option value="Descending-Price">High to Low</option>
+							 <option value="Ascending-Unit-Price">Low to High Unit Price (meat only)</option>
+							 <option value="Descending-Unit-Price">High to Low Unit Price (meat only)</option>
+						   </select>
+					   </div>
+
+					   <div class="sort">
+						   <label for="Store">Store:</label>
+						   <select name="stores" size="{{stores|length}}" multiple>
+							   	{% for store in stores %}
+								<option selected value="{{store}}">{{store}}</option>
+								{% endfor %}
+						   </select>
+					   </div>
+
+					   <div class="sort">
+							<label for="Category">Category:</label>
+							<select name="categories" size="{{categories|length}}" multiple>
+								{% for category in categories %}
+									<option selected value="{{category}}">{{category}}</option>
+								{% endfor %}
+							</select>
+					   </div>
+
+					   <div class="row buttons">
+						   <div class="col-12">
+							   <ul class="actions">
+								   <li><input type="submit" style="padding-left: 1em;padding-right: 1em;padding-top: .5em;padding-bottom: .5em;" value="Submit"></li>
+								   <li>
+									   <input style="padding: .5em 1em .5em 1em;"  formmethod="get" formaction="{{ url_for('update_products')}}" type="submit" value="Update">
+								   </li>
+								   <li><input type="reset" class="alt" style="padding-bottom: .5em;padding-top: .5em;padding-left: 1em;padding-right: 1em;" value="Clear"></li>
+							   </ul>
+						   </div>
+					   </div>
+					</form>
+
+				</div>
+			</article>
+
+		<!-- Products -->
+			<article id="work" class="wrapper style2" style="padding-top: 3em;padding-bottom: 3em;">
+
+			<div class="container" style="padding-top: 12.5px;padding-bottom: 12.5px;">
+				<div class="row">
+					{% for product in products %}
+					<div class="col-4 col-6-medium col-12-small">
+						<section class="box style1">
+							<span class="icon featured fa-comments">
+								<img id="product" alt="No image. Update Products." src="{{product.img}}">
+							</span>
+								<h3>{{product.name}}</h3>
+								<p class="product">${{product.price}} / {{product.category.title()}} / {{product.store.title()}}</p>
+						</section>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</article>
+
+
+		<!-- Contact -->
+			<article id="contact" class="wrapper style4" style="padding-top: 1em;padding-bottom: 1em;"><div class="container medium" style="padding-bottom: .5em;">
+				<div class="row contact">
+						
+						
+					</div>
+					<footer>
+						<ul id="copyright">
+							<li>© Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net/">HTML5 UP</a></li>
+						</ul>
+					</footer>
+				</div>
+			</article>
+
+		<!-- Scripts -->
+			<script src="static/Grocery%20Aggregator_files/jquery.html"></script>
+			<script src="static/Grocery%20Aggregator_files/jquery_002.html"></script>
+			<script src="static/Grocery%20Aggregator_files/browser.html"></script>
+			<script src="static/Grocery%20Aggregator_files/breakpoints.html"></script>
+			<script src="static/Grocery%20Aggregator_files/util.html"></script>
+			<script src="static/Grocery%20Aggregator_files/main.html"></script>
+
+	
+</body></html>

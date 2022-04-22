@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 #TODO add unit price
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500), nullable=False)
+    name = db.Column(db.String(500))
     price = db.Column(db.Float, nullable=False)
     unit_price = db.Column(db.String(250))
     category = db.Column(db.String(250), nullable=False)
@@ -68,10 +68,15 @@ def update_products():
         response = requests.get(product.url)
         soup = BeautifulSoup(response.content, "lxml")
         if product.store.title() == "Tom Thumb":
+            # product.name =
             product.price = (json.loads(soup.findAll(text=re.compile('price'))[-1])['offers']['price'])
             # product.unit_price = ()
-            product.img = soup.find("img", {"alt": product.name})["src"]
-            db.session.commit()
+            product.img = soup.select("picture img")[0]["src"]
+        elif product.store.title() == "India Bazaar":
+            product.name = soup.find("h1", class_="item-view-header").text.strip()
+            product.img = soup.find("ul", id="image-gallery").find("li")["data-full-url"]
+            product.price = soup.find("span", class_="item_price").text.strip().split('$')[-1]
+    db.session.commit()
     # TODO Add more stores
     # Krogers
 

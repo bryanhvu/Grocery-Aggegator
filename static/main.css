@@ -1923,10 +1923,13 @@ input, select, textarea {
 
 		.box.style1 {
 			padding: 1.5em 1.5em 1.5em 1.5em;
+			min-height: 45vh;
+			max-height: 45vh;
 		}
 
 			.box.style1 h3 {
 				margin-bottom: 0.5em;
+				height: 7vh;
 			}
 
 		.box.style2 h3 {
@@ -1940,6 +1943,11 @@ input, select, textarea {
 			margin: -4em 0 4em -4em;
 			width: auto;
 		}
+
+/* Product Tags */
+    p.product {
+        vertical-align: text-bottom;
+    }
 
 /* Icons */
 
@@ -1982,6 +1990,7 @@ input, select, textarea {
 			display: block;
 			margin: 0 0 .25em 0;
 			cursor: default;
+			height: 27.5vh;
 		}
 
 			.icon.featured:before {
@@ -2186,8 +2195,8 @@ input, select, textarea {
 
 /* Product Image */
     #product {
-        max-width: 70%;
-        height: auto;
+        max-width: 90%;
+        max-height: 27vh;
     }
 
 /* Large */
